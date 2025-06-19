@@ -34,7 +34,7 @@ const isDev = process.env.NODE_ENV === 'development'
 export class HTTPRepository implements UserRepository {
     async createUser(user: Omit<User, 'id'>): Promise<User | null> {
         try {
-          const res = await fetch("https://tu-backend.com/api/users", {
+          const res = await fetch("http://192.168.1.85:3000/api/user", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"

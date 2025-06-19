@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colors'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
@@ -23,3 +24,44 @@ const styles = StyleSheet.create({
     }
 })
 export default MembershipBadge
+
+type RecentBadgeProps = {
+  label:string;
+  isSelected?:boolean;
+}
+
+export const RecentBadge = ({
+  label,
+  isSelected
+}:RecentBadgeProps) => {
+  return (
+    <View
+      style={[
+        styles.badge,
+        {backgroundColor: isSelected ? colors.activeBadgeColor : colors.primary}
+      ]}
+    >
+      <Text 
+        style={badgeStyles.badgeText}
+        numberOfLines={1}
+        ellipsizeMode='tail'
+        >{label}</Text>
+    </View>
+  )
+}
+
+const badgeStyles = StyleSheet.create({
+  badge: {
+    borderRadius:20,
+    paddingHorizontal: 12,
+    paddingVertical:4,
+    alignContent: 'center',
+    backgroundColor: colors.primary,
+    alignSelf: 'flex-start',
+    maxWidth:90,
+    // minHeight: 30
+  },
+  badgeText: {
+    color: 'white'
+  }
+})

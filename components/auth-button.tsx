@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, Text, TextStyle, ViewStyle } from "react-native";
 
-type IoniconName = React.ComponentProps<typeof Ionicons>['name']
+export type IoniconName = React.ComponentProps<typeof Ionicons>['name']
 
 interface AuthButtonProps {
   label: string;

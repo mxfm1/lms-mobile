@@ -1,6 +1,9 @@
 import MembershipContent from '@/components/membership-component'
 import ProfileAvatar from '@/components/profile-avatar'
 import ProfileSection, { ProfileButtonData, ProfileSectionButton } from '@/components/profile/profile-section'
+import { useUserAuth } from '@/utils/helpers'
+import { authToken } from '@/utils/session'
+import { Redirect, useRouter } from 'expo-router'
 import React from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 
@@ -31,6 +34,25 @@ const courseButtonData: ProfileButtonData[] = [
   }
 ]
 const ProfileScreen = () => {
+
+  const { isSignedIn,isLoading } = useUserAuth()
+  const router = useRouter()
+  if(isLoading){
+    return <Text>Loading...</Text>
+  }
+
+  if(!isSignedIn){
+      console.log("USUARIO SIN INICIAR SESION")
+    return (
+      <Redirect href='/login'/>
+    )
+  }
+
+  const handleLogout = async() => {
+    console.log("pressed")
+    await authToken?.closeSession()
+    router.push("/login")
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topSection}>
@@ -41,7 +63,7 @@ const ProfileScreen = () => {
         </View>
       </View>
 
-        <ScrollView style={styles.profileDataSection}>
+        <ScrollView style={styles.profileDataSection} showsVerticalScrollIndicator={false}>
             <MembershipContent />
 
            <View style={{gap:12, marginTop: 20}}>
@@ -62,8 +84,9 @@ const ProfileScreen = () => {
              <View style={{
               paddingLeft:14
              }}>
-               <ProfileSectionButton 
-                  label='Cerrar sesion' 
+               <ProfileSectionButton
+                  pressFunction={() => handleLogout()}
+                  label='Cerrar sesion'
                   icon='log-out' 
                   color='#dd6262'
                   isLast

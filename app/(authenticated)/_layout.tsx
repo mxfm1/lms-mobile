@@ -1,19 +1,32 @@
-import { Stack } from 'expo-router'
+import { colors } from '@/theme/colors'
+import { Ionicons } from '@expo/vector-icons'
+import { Drawer } from 'expo-router/drawer'
 import React from 'react'
+import { View } from 'react-native'
 
-const _layout = () => {
+const AppLayout = () => {
   return (
-    <Stack
+    <View style={{flex:1}}>
+      <Drawer 
         screenOptions={{
-            headerShown:false
+          headerTitle: '',
+          headerStyle: {backgroundColor: colors.pressedBackground},
+          drawerActiveTintColor: colors.primary,
+          
         }}
-    >
-        <Stack.Screen 
-            name='(tabs)'
-
+      >
+        <Drawer.Screen 
+          name="(tabs)/courses"
+          options={{
+            drawerLabel:'Inicio',
+            title:'My App',
+            drawerIcon: ({color,size}) => <Ionicons name='home' size={size} color={color} /> 
+          }}
         />
-    </Stack>
+        
+      </Drawer >
+    </View>
   )
 }
 
-export default _layout
+export default AppLayout

@@ -110,7 +110,7 @@ const getDynamicStyles = (isDark: boolean) =>
     membershipTitle: {
       fontSize: 18,
       fontWeight: '600',
-      color: isDark ? '#fff' : '#000',
+      color: isDark ? 'black' : 'white',
       marginBottom: 12,
     },
   });

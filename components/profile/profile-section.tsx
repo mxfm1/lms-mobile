@@ -47,19 +47,23 @@ type ProfileSectionButtonProps = {
     label:string,
     icon?: keyof typeof Ionicons.glyphMap
     color?:string
+    pressFunction?: () => void
 }
 
 export const ProfileSectionButton = ({
     isLast,
     label,
     icon,
-    color
+    color,
+    pressFunction
 }:ProfileSectionButtonProps) => {
     return (
-        <Pressable style={({pressed}) => [
-            styles.buttonContent,
-            !isLast && styles.buttonBottomBorder,
-            {opacity: pressed ? 0.6 : 1}
+        <Pressable 
+            onPress={pressFunction}
+            style={({pressed}) => [
+                styles.buttonContent,
+                !isLast && styles.buttonBottomBorder,
+                {opacity: pressed ? 0.6 : 1}
         ]}>
             <Ionicons name={icon ? icon : 'person'} size={20} color={color ? color : 'white'}/>
             <Text style={[styles.buttonText,{color: color ? color : colors.profileTextColor}]}>{label}</Text>
