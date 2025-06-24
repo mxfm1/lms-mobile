@@ -1,41 +1,80 @@
 // import { useGradualAnimation } from '@/lib/screen-height'
+import { userEmailLoginController } from '@/app/presentation/controller/auth'
+import { EmailLoginFormType } from '@/app/shared/types'
 import { IoniconName } from '@/components/auth-button'
 import CustomButton from '@/components/button'
 import { colors } from '@/theme/colors'
 import { Ionicons } from '@expo/vector-icons'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Control, Controller, useForm } from 'react-hook-form'
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { emailLoginSchema } from '../../shared/schema'
 
-const EmailRegistrationForm = () => {
+
+export const EmailLoginForm = () => {
+
+    const[ isLoading,setIsLoading] = useState<boolean>(false)
+    const[apiErrorMessage,setApiErrorMessage] = useState('')
+
     const router = useRouter()
     const form = useForm({
-        
+        resolver: zodResolver(emailLoginSchema),
+        defaultValues: {
+            email: '',
+            password: ''
+        },
+        mode: 'onSubmit',
+        reValidateMode: 'onSubmit'
+
     })
 
-    const formSubmit = (data:any) => {
-        console.log('datos enviados',data)
+    const formSubmit = async(data:EmailLoginFormType) => {
+        setIsLoading(true)
+        Keyboard.dismiss()
+        const result = await userEmailLoginController(data)
+        if(result.success){
+            router.replace("/welcome")
+        }else{
+            setApiErrorMessage(result.message)
+        }
+        setIsLoading(false)
     }
 
   return (
     <>
-        <FormInput 
-            name='email'
-            control={form.control}
-            placeholder='Ingresa tu email..'
-            secureTextEntry={false}
-            icon='mail'
-        />
+        <View style={{gap:12}}>
+             <FormInput 
+                name='email'
+                control={form.control}
+                placeholder='Ingresa tu email..'
+                secureTextEntry={false}
+                icon='mail'
+            />
         
-        <FormInput 
-            name='password'
-            control={form.control}
-            placeholder='Contraseña**'
-            secureTextEntry
-            icon='lock-closed'
+            <FormInput 
+                name='password'
+                control={form.control}
+                placeholder='Contraseña**'
+                secureTextEntry
+                icon='lock-closed'
+            />
+        </View>
+
+        {apiErrorMessage && (
+            <View>
+                <Text style={[formStyles.errorText,{alignSelf:'center'}]}>{apiErrorMessage}</Text>
+            </View>
+        )}
+      <CustomButton 
+        label='Inicia sesion' 
+        style={formStyles.formButton} 
+        textColor={colors.dark} 
+        onPress={form.handleSubmit(formSubmit)}
+        // disabled={isLoading}
+        isLoading={isLoading}
         />
-      <CustomButton label='Inicia sesion' style={formStyles.formButton} textColor={colors.dark} />
 
         <View style={formStyles.footerContainer}>
             <Text style={formStyles.footerText}>¿No tienes cuenta?</Text>
@@ -91,9 +130,12 @@ export const FormInput = ({
                             value={value}
                             onChangeText={onChange}
                             onBlur={onBlur}
+                            autoCapitalize='none'
+                            autoCorrect={false}
                             placeholder={placeholder}
                             placeholderTextColor={colors.gray}
                             secureTextEntry={secureTextEntry && !showPassword}
+                            textContentType={secureTextEntry ? "oneTimeCode" : 'none'}
                             style={[formStyles.textInput,{flex:1}]}
                         />
                         {secureTextEntry && (
@@ -234,4 +276,4 @@ const checkboxStyles = StyleSheet.create({
     }
 })
 
-export default EmailRegistrationForm
+export default EmailLoginForm

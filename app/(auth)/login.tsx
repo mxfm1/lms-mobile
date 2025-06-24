@@ -11,14 +11,12 @@ import { Redirect, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, Platform, StyleSheet, Text, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import EmailRegistrationForm from './components/email-register-form'
+import EmailLoginForm from './components/email-login-form'
 
 const userRepo = new HTTPRepository()
 
 const login = () => {
   const { startSSOFlow } = useSSO()
-
-  console.log("AUTH URL",AuthSession.makeRedirectUri())
   const handleAuth = async(strategy: 'oauth_google' | 'oauth_apple') => {
     try{
       const { createdSessionId,setActive,signUp } = await startSSOFlow({
@@ -117,8 +115,6 @@ const testLogin = () => {
       const password = 'prueba123'
       const name = 'usuario Prueba'
 
-
-      console.log("DATOS DEL USUARIO A REGISTRAR",email,password,name)
       const res = await fetch(`${API_BASE_URL}/api/register`,{
         method: 'POST',
         headers:{
@@ -128,10 +124,7 @@ const testLogin = () => {
       })
 
       const data = await res.json()
-      console.log("DATA FROM BACKEND",data)
-      console.log("TOKEN FROM FRONTEND",data.token)
       if(!res.ok || !data.token){
-        console.log("Problemas al registrar..")
         return {
           success: false,
           message: data.message || "No se pudo registrar"
@@ -175,7 +168,7 @@ const testLogin = () => {
         </Text>
 
         <View style={styles.formContainer}>
-          <EmailRegistrationForm />
+          <EmailLoginForm />
         </View>
         <View style={styles.buttonContainer}>
           {Platform.OS === 'android' ? (

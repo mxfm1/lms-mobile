@@ -7,15 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { z } from 'zod';
 import { registerUserPresentation } from '../presentation/auth';
-import { FormCheckbox, FormInput } from './components/email-register-form';
-import { emailRegisterSchema } from './components/schema';
+import { emailRegisterSchema } from '../shared/schema';
+import { EmailRegisterType } from '../shared/types';
+import { FormCheckbox, FormInput } from './components/email-login-form';
 
-export type emailRegisterTypeSchema = z.infer<typeof emailRegisterSchema>
 
 const EmailRegister = () => {
     
@@ -38,17 +37,14 @@ const EmailRegister = () => {
         }
     })
     
-    const handleFormSubmit = async(data: emailRegisterTypeSchema) => {
-        // console.log("DATA FROM FORM",data)
+    const handleFormSubmit = async(data: EmailRegisterType) => {
         setIsLoadingAction(true)
+        Keyboard.dismiss()
         const result = await registerUserPresentation(data)
         if(result.success){
-            // SHOW SOME SUCESS LOGIN MODAL
-            console.log("DATA FROM BACKEND",result)
             await new Promise((res) => setTimeout(res,400))
             router.replace("/welcome")
         }else{
-            console.log("Error en el registro..",result.message)
             setApiErrorMessage(result.message)
         }
 

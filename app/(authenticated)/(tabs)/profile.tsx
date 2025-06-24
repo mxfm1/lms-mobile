@@ -1,10 +1,11 @@
+import LogoutOverlay from '@/components/logout-overlay'
 import MembershipContent from '@/components/membership-component'
 import ProfileAvatar from '@/components/profile-avatar'
 import ProfileSection, { ProfileButtonData, ProfileSectionButton } from '@/components/profile/profile-section'
 import { useUserAuth } from '@/utils/helpers'
 import { authToken } from '@/utils/session'
 import { Redirect, useRouter } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 const configButtonData: ProfileButtonData[] = [
@@ -35,26 +36,36 @@ const courseButtonData: ProfileButtonData[] = [
 ]
 const ProfileScreen = () => {
 
+  const [isLoggedOut,setIsLoggingOut] = useState<boolean>(false)
   const { isSignedIn,isLoading } = useUserAuth()
   const router = useRouter()
+
+  const handleLogout = async() => {
+    setIsLoggingOut(true)
+    try{
+      await authToken?.closeSession()
+      setTimeout(() => {
+        router.replace("/login")
+      },2000)
+    }catch(error){
+      console.error("Error al cerrar sesion",error)
+      setIsLoggingOut(false)
+    }
+  }
+
   if(isLoading){
     return <Text>Loading...</Text>
   }
 
   if(!isSignedIn){
-      console.log("USUARIO SIN INICIAR SESION")
     return (
       <Redirect href='/login'/>
     )
   }
 
-  const handleLogout = async() => {
-    console.log("pressed")
-    await authToken?.closeSession()
-    router.push("/login")
-  }
   return (
     <SafeAreaView style={styles.container}>
+      {isLoggedOut && <LogoutOverlay />}
       <View style={styles.topSection}>
         <ProfileAvatar />
         <View style={styles.userProfileData}>

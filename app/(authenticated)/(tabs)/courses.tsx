@@ -18,7 +18,6 @@ const courses = () => {
     const fetchImages = async() => {
       const images = await repo.getCoursesPhotos()
 
-      // console.log("FROM FRONTEND",images)
       setImages(images)
 
     }
@@ -68,12 +67,10 @@ const courses = () => {
           const index = Math.round(ev.nativeEvent.contentOffset.x / width)
           // setActiveIndex(index)
           handleBGChange(index)
-          console.log("INDICE ACTIVO BG",index)
           // setActiveIndex(index)
           // handleIndexChange(index)
 
           // const index = 
-          // console.log("TEST INDEX",index)
           // setActiveIndex(index)
           // setActiveIndex(INDEX)
         }}
@@ -97,7 +94,6 @@ const courses = () => {
         style={{position: 'absolute', bottom: 10}}
         renderItem={({item,index}) => (
          <TouchableOpacity onPress={() => {
-          console.log("INDICE ACTIVO THUMBNAIL",index)
           setActiveIndex(index)
           handleIndexChange(index)
          }}>

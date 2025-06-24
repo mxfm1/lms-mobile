@@ -1,7 +1,7 @@
-import { emailRegisterTypeSchema } from "../(auth)/email-register";
 import { registerUser } from "../services/auth-services";
+import { EmailRegisterType } from "../shared/types";
 
-export const registerUserPresentation = async(data:emailRegisterTypeSchema) => {
+export const registerUserPresentation = async(data:EmailRegisterType) => {
     try{
         const response = await registerUser(data)
         return {
@@ -9,7 +9,6 @@ export const registerUserPresentation = async(data:emailRegisterTypeSchema) => {
             data:response
         }
     }catch(error:any){
-        console.log("PRESENTATION LAYER ERROR",error)
         return {
             success:false,
             message: error.message || 'Error inesperado'

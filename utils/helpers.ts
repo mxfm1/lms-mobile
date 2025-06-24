@@ -9,7 +9,6 @@ export const useAuthRedirect = () => {
     useEffect(() => {
         const getToken = async() => {
             const token = await AsyncStorage.getItem("auth_token")
-            console.log("TOKEN FROM HELPER",token)
             if(!token){
                 setIsSignedIn(false)
             }else{
